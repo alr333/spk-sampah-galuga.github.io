@@ -98,8 +98,25 @@ function render(){
 
 render();
 
+document.getElementById('addBtn').addEventListener('click', ()=>{
+      const name = document.getElementById('kName').value.trim();
+      const ton = Number(document.getElementById('kTon').value || 0);
+      if(!name || ton<0){ alert('Isi nama kecamatan dan ton (>=0)'); return; }
+      const idx = kecamatan.findIndex(k=>k.name.toLowerCase()===name.toLowerCase());
+      if(idx>=0){ kecamatan[idx].ton = ton; }
+      else { kecamatan.push({name, ton}); }
+      save(); render();
+      document.getElementById('kName').value=''; document.getElementById('kTon').value='';
+    });
+
+    document.getElementById('presetSel').addEventListener('change',(e)=>{
+      if(!e.target.value) return; const obj = JSON.parse(e.target.value); document.getElementById('kName').value=obj.name; document.getElementById('kTon').value=obj.ton; e.target.value='';
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', ()=>{ if(confirm('Reset semua data kecamatan ke default?')){ kecamatan = defaultKecamatan.slice(); save(); render(); } });
+
 // Form submit
-form.addEventListener('submit', function(e){
+/**form.addEventListener('submit', function(e){
   e.preventDefault();
   const name = document.getElementById('kecamatan').value.trim();
   const ton = Number(document.getElementById('tonase').value || 0);
@@ -109,7 +126,7 @@ form.addEventListener('submit', function(e){
   else { kecamatan.push({name, ton}); }
   save(); render();
   form.reset();
-});
+});**/
 
 // Reset data
 document.getElementById('resetBtn').addEventListener('click', ()=>{
