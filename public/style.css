@@ -335,4 +335,7 @@ footer {
   .nav-links {
     display: none;
   }
+  .ukuran {
+    flex-direction:column;
+  }
 }
