@@ -76,21 +76,28 @@
     </section>
 
     <section class="section" id="data">
+      <div style="display: flex;justify-content: center;align-items: center; font-size: 20px;">
       <h2>Grafik Timbulan Sampah per Kecamatan</h2>
-      <div class="chart-container">
-        <canvas id="barChart"></canvas>
       </div>
-      <div class="chart-container">
-        <canvas id="pieChart"></canvas>
+      <div style="display: flex;justify-content: center;align-items: center;">
+        <div class="chart-container">
+          <canvas id="barChart"></canvas>
+        </div>
+        <div class="chart-container">\
+          <canvas id="pieChart"></canvas>
+        </div>
       </div>
     </section>
 
     <section class="card" id="data" style="margin-top:20px">
+      <div style="display: flex;justify-content: center;align-items: center;">
       <div class="small">Tambah / Ubah Data Kecamatan</div>
       <div class="controls">
+        <form id="formData">
         <input id="kName" type="text" placeholder="Nama Kecamatan (contoh: Cibinong)" />
         <input id="kTon" type="number" placeholder="Ton per hari" min="0" />
-        <button id="addBtn">Tambah / Update</button>
+        <button id="addBtn">Tambah / Update</button> 
+      </form>
         <select id="presetSel">
           <option value="">Pilih contoh kecamatan</option>
           <option value='{"name":"Cibinong","ton":120}'>Cibinong - 120</option>
@@ -99,21 +106,30 @@
         </select>
         <button id="resetBtn" class="btn-outline">Reset Semua</button>
       </div>
+      </div>
       <div class="kecamatan-list" id="kList"></div>
     </section>
 
-    <section class="card" id="laporan" style="margin-top:20px">
-      <div class="small">Laporan</div>
+    <section class="card" id="laporan" style="margin-top:20px"> 
+      <div style="display: flex;justify-content: center;align-items: center;">
+      <div class="small" style="font-size: 20px;">Laporan</div>
+      </div>
+      <div style="display: flex;justify-content: center;align-items: center;">
       <ul style="color:var(--muted);padding-left:16px">
         <li>Ekspor data ke CSV/Excel</li>
         <li>Cetak laporan bulanan</li>
         <li>Notifikasi status kapasitas</li>
       </ul>
+      </div>
     </section>
 
     <section class="card" id="tentang" style="margin-top:20px">
+      <div style="display: flex;justify-content: center;align-items: center;">
       <div class="small">Tentang Sistem</div>
+      </div>
+      <div style="display: flex;justify-content: center;align-items: center;">
       <p style="color:var(--muted);font-size:14px">Sistem Penunjang Keputusan ini dirancang untuk membantu monitoring timbulan sampah di Kabupaten Bogor dengan fokus pada TPA Galuga. Fitur utama meliputi dashboard monitoring, input data per kecamatan, status real-time, grafik visualisasi, serta laporan.</p>
+      </div>
     </section>
 
     <footer>
