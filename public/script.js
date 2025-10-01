@@ -134,4 +134,42 @@ document.getElementById('resetBtn').addEventListener('click', ()=>{
     kecamatan = defaultKecamatan.slice(); save(); render();
   }
 });
+// Fungsi animasi persentase CH4
+function animateMethane(prev, target) {
+  const methaneEl = document.getElementById('methanePercent');
+  let current = prev;
+
+  const step = () => {
+    if(Math.abs(current - target) < 0.1) {
+      current = target;
+      updateMethaneDisplay(current);
+      return;
+    }
+    current += (target - current) * 0.05; // smoothing
+    updateMethaneDisplay(current);
+    requestAnimationFrame(step);
+  };
+  
+  step();
+}
+
+// Update tampilan CH4
+function updateMethaneDisplay(value) {
+  const methaneEl = document.getElementById('methanePercent');
+  const percent = Math.min(value, 100);
+  let cls='safety', color='var(--green)';
+
+  if(percent > 100) { cls='danger'; color='var(--red)'; }
+  else if(percent > 80) { cls='warning'; color='var(--orange)'; }
+
+  methaneEl.className = 'status-pill ' + cls;
+  methaneEl.innerHTML = `<span class="dot" style="background:${color}"></span> ${percent.toFixed(1)}%`;
+}
+
+// Ambil total CH4 dan animasi
+const CH4_LIMIT = 50; // ton/hari sebagai batas aman
+const totalCH4 = kecamatan.reduce((s,k)=>s + k.ton * 0.05, 0); // ton CH4/hari
+let riskPercent = Math.min((totalCH4 / CH4_LIMIT) * 100, 100); // batas max 100%
+animateMethane(0, riskPercent); // animasi dari 0% ke nilai sekarang
+
 
