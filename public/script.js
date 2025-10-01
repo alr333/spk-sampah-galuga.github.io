@@ -1,136 +1,341 @@
-// Data default
-const defaultKecamatan = [
-  {name:'Cibinong', ton:120},
-  {name:'Dramaga', ton:90},
-  {name:'Bogor Selatan', ton:200},
-  {name:'Ciampea', ton:70},
-  {name:'Ciseeng', ton:60}
-];
-
-let capacity = 1100;
-let kecamatan = JSON.parse(localStorage.getItem('kecamatan_v1')) || defaultKecamatan.slice();
-
-// Elemen DOM
-const capacityEl = document.getElementById('capacityValue');
-const totalTonEl = document.getElementById('totalTon');
-const countyStatusEl = document.getElementById('countyStatus');
-const kListEl = document.getElementById('kList');
-const tableBody = document.getElementById('tableBody');
-const form = document.getElementById('formData');
-
-// Chart.js setup
-const barCtx = document.getElementById('barChart').getContext('2d');
-const pieCtx = document.getElementById('pieChart').getContext('2d');
-
-let barChart = new Chart(barCtx, {
-  type:'bar',
-  data:{labels:[], datasets:[{label:'Tonase / Hari', data:[], backgroundColor:'#3498db'}]},
-  options:{responsive:true}
-});
-
-let pieChart = new Chart(pieCtx, {
-  type:'pie',
-  data:{labels:[], datasets:[{data:[], backgroundColor:['#27ae60','#f39c12','#c0392b','#3498db','#9b59b6','#1abc9c']}]},
-  options:{responsive:true}
-});
-
-capacityEl.textContent = capacity;
-
-// Helpers
-function save(){ localStorage.setItem('kecamatan_v1', JSON.stringify(kecamatan)); }
-
-function calcCountyStatus(total){
-  const ratio = total / capacity;
-  if(ratio > 1) return {label:'Danger', cls:'danger', color:'var(--red)'};
-  if(ratio > 0.8) return {label:'Warning', cls:'warning', color:'var(--orange)'};
-  return {label:'Safety', cls:'safety', color:'var(--green)'};
+:root {
+  --bg: #0f1724;
+  --card: #0b1220;
+  --muted: #9aa7b2;
+  --green: #16a34a;
+  --orange: #f59e0b;
+  --red: #ef4444;
+  --blue: #0ea5e9;
+  --glass: rgba(255, 255, 255, 0.03);
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
 }
 
-// Render fungsi utama
-function render(){
-  const total = kecamatan.reduce((s,k)=>s + Number(k.ton || 0),0);
-  totalTonEl.textContent = total;
-
-  // Status Kabupaten
-  const st = calcCountyStatus(total);
-  countyStatusEl.className = 'status-pill ' + st.cls;
-  countyStatusEl.innerHTML = `<span class="dot" style="background:${st.color}"></span> ${st.label}`;
-
-  // List Kecamatan (kanan)
-  kListEl.innerHTML = '';
-  kecamatan.forEach(k=>{
-    const item = document.createElement('div'); item.className='k-item';
-    const left = document.createElement('div'); left.innerHTML = `<strong>${k.name}</strong><div class="small">ritasi (ton/hari)</div>`;
-    const right = document.createElement('div'); right.innerHTML = `<div class="ton">${k.ton}</div>`;
-    const actions = document.createElement('div'); actions.style.display='flex'; actions.style.gap='8px';
-    const editBtn = document.createElement('button'); editBtn.textContent='Edit';
-    editBtn.onclick=()=>{document.getElementById('kecamatan').value=k.name;document.getElementById('tonase').value=k.ton}
-    const delBtn = document.createElement('button'); delBtn.textContent='Hapus';
-    delBtn.onclick=()=>{kecamatan = kecamatan.filter(x=>x.name!==k.name); save(); render();};
-    actions.appendChild(editBtn); actions.appendChild(delBtn);
-    item.appendChild(left); item.appendChild(right); item.appendChild(actions);
-    kListEl.appendChild(item);
-  });
-
-  // Tabel laporan bawah
-  tableBody.innerHTML = '';
-  kecamatan.forEach((k,i)=>{
-    let kstatus = '<span style="color:var(--green)">Safety</span>';
-    const proportion = (k.ton / capacity);
-    if(proportion > 1) kstatus = '<span style="color:var(--red)">Danger</span>';
-    else if(proportion > 0.8) kstatus = '<span style="color:var(--orange)">Warning</span>';
-
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${i+1}</td><td>${k.name}</td><td>${k.ton} ton</td><td>${kstatus}</td>`;
-    tableBody.appendChild(tr);
-  });
-
-  // Update Chart
-  const labels = kecamatan.map(k=>k.name);
-  const tonaseData = kecamatan.map(k=>k.ton);
-  barChart.data.labels = labels;
-  barChart.data.datasets[0].data = tonaseData;
-  barChart.update();
-  pieChart.data.labels = labels;
-  pieChart.data.datasets[0].data = tonaseData;
-  pieChart.update();
+* {
+  box-sizing: border-box;
 }
 
-render();
+body {
+  margin: 0;
+  background: linear-gradient(180deg, #071028 0%, #071a2b 100%);
+  color: #e6eef6;
+}
 
-document.getElementById('addBtn').addEventListener('click', ()=>{
-      const name = document.getElementById('kName').value.trim();
-      const ton = Number(document.getElementById('kTon').value || 0);
-      if(!name || ton<0){ alert('Isi nama kecamatan dan ton (>=0)'); return; }
-      const idx = kecamatan.findIndex(k=>k.name.toLowerCase()===name.toLowerCase());
-      if(idx>=0){ kecamatan[idx].ton = ton; }
-      else { kecamatan.push({name, ton}); }
-      save(); render();
-      document.getElementById('kName').value=''; document.getElementById('kTon').value='';
-    });
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
 
-    document.getElementById('presetSel').addEventListener('change',(e)=>{
-      if(!e.target.value) return; const obj = JSON.parse(e.target.value); document.getElementById('kName').value=obj.name; document.getElementById('kTon').value=obj.ton; e.target.value='';
-    });
+/* Navbar */
+nav {
+  background: var(--card);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
 
-    document.getElementById('resetBtn').addEventListener('click', ()=>{ if(confirm('Reset semua data kecamatan ke default?')){ kecamatan = defaultKecamatan.slice(); save(); render(); } });
+.nav-brand {
+  font-weight: 800;
+  color: var(--blue);
+  font-size: 18px;
+}
 
-// Form submit
-/**form.addEventListener('submit', function(e){
-  e.preventDefault();
-  const name = document.getElementById('kecamatan').value.trim();
-  const ton = Number(document.getElementById('tonase').value || 0);
-  if(!name || ton<0){ alert('Isi nama kecamatan dan ton (>=0)'); return; }
-  const idx = kecamatan.findIndex(k=>k.name.toLowerCase()===name.toLowerCase());
-  if(idx>=0){ kecamatan[idx].ton = ton; }
-  else { kecamatan.push({name, ton}); }
-  save(); render();
-  form.reset();
-});**/
+.nav-links {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
 
-// Reset data
-document.getElementById('resetBtn').addEventListener('click', ()=>{
-  if(confirm('Reset semua data kecamatan ke default?')){
-    kecamatan = defaultKecamatan.slice(); save(); render();
+.nav-links a {
+  color: #e6eef6;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.nav-links a:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-actions {
+  display: flex;
+  gap: 10px;
+}
+
+
+
+.btn {
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--blue);
+  color: #fff;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--muted);
+}
+
+/* Header */
+header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.lead {
+  margin: 0;
+  color: #fff;
+  font-size: 14px;
+}
+
+/* Hero Section */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background-image: url('img/Background.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.hero::after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 30%;
+  background: linear-gradient(0deg, rgba(15, 23, 36, 0.938)8%, rgba(15, 23, 36, 0)50%);
+  bottom: 0;
+}
+
+.hero .content {
+  padding: 1.4rem 7%;
+  max-width: 60rem;
+}
+
+.hero .content h1 {
+  font-size: 5em;
+  color: #fff;
+  text-shadow: 1px 1px 3px rgba(1, 1, 3, 0,5);
+  line-height: 1.2;
+}
+
+.hero .content h1 span {
+color: var(--card);
+}
+
+.hero .content p {
+  font-size: 1.6rem;
+  margin-top: 1rem;
+  line-height: 1.4;
+  font-weight: 100;
+  text-shadow: 1px 1px 3px rgba(1, 1, 3, 0,5);
+ /* mix-blend-mode: difference;*/
+}
+
+
+/* Grid & Card (section) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 18px;
+}
+
+section.card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  
+}
+
+section.big {
+  grid-column: span 2;
+}
+
+/* Status Pills */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.safety {
+  background: rgba(22, 163, 74, 0.09);
+  color: var(--green);
+}
+
+.warning {
+  background: rgba(245, 158, 11, 0.08);
+  color: var(--orange);
+}
+
+.danger {
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--red);
+}
+
+/* Kecamatan List */
+.kecamatan-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.k-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--glass);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.k-item strong {
+  font-size: 15px;
+}
+
+.ton {
+  font-weight: 700;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: transparent;
+  color: inherit;
+  min-width: 160px;
+}
+
+button {
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 0;
+  background: var(--blue);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* Summary */
+.summary {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.summary .value {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.small {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
+}
+
+/* Chart Container */
+.chart-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 20px;
+  background: var(--card);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* Footer */
+footer {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+  padding: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
   }
-});
+  section.big {
+    grid-column: span 1;
+  }
+  .nav-links {
+    display: none;
+  }
+  .ukuran {
+    flex-direction: column;
+  }
+}
