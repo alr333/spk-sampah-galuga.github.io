@@ -1,13 +1,6 @@
 {
-  "version": 2,
   "builds": [
-    { "src": "halamanutama.html", "use": "@vercel/static" },
-    { "src": "index.html", "use": "@vercel/static" },
-    { "src": "style.css", "use": "@vercel/static" },
-    { "src": "script.js", "use": "@vercel/static" }
+    { "src": "index.html", "use": "@vercel/static" }
   ],
-  "routes": [
-    { "src": "/", "dest": "/halamanutama.html" },
-    { "src": "/dashboard", "dest": "/index.html" }
-  ]
+  "outputDirectory": "."
 }
