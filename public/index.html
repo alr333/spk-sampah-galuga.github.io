@@ -18,22 +18,33 @@
       <a href="#laporan">Laporan</a>
       <a href="#tentang">Tentang</a>
     </div>
-    <div class="nav-actions">
-      <button class="btn btn-outline">Login</button>
-      <button class="btn btn-primary">Register</button>
-    </div>
-  </nav>
+    <nav class="navbar">
+      <main>
+        <!--<h2 id="welcomeMsg" style="font-size: 12px;"></h2>-->
+        <button onclick="logout()" style="font-size: 8px;">Logout</button>
+      </nav>
+</nav>
 
-  <!-- Hero Section -->
-  <section class="hero" id="dashboard">
-    <main class="content">
-      <div style="width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--green),#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:800;color:#021">TPA</div>
-      <div class="brand">
-        <h1>SPK Timbulan Sampah — TPA Galuga (Kab. Bogor)</h1>
-        <p class="lead">Monitoring status timbulan sampah per kecamatan dan kapasitas TPA Galuga.</p>
-      </div>
-      <a href="#data" class="cta">Cek Yukkk..</a>
+<!-- Hero Section -->
+<section class="hero" id="dashboard">
+  <main class="content">
+    <div style="width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--green),#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:800;color:#021">TPA</div>
+    <div class="brand">
+      <h1>SPK Timbulan Sampah — TPA Galuga (Kab. Bogor)</h1>
+      <p class="lead">Monitoring status timbulan sampah per kecamatan dan kapasitas TPA Galuga.</p>
+    </div>
+    <a href="#data" class="cta">Cek Yukkk..</a>
     </main>
+  </section>
+  
+  <!-- Tentang Sistem -->
+  <section class="card" id="tentang" style="margin-top:20px">
+    <div style="display: flex;justify-content: center;align-items: center;">
+      <div class="small" style="font-size: 20px;">Tentang Sistem</div>
+    </div>
+    <div style="display: flex;justify-content: center;align-items: center;">
+      <p style="color:var(--muted);font-size: 15px;text-align:center">Sistem Penunjang Keputusan ini dirancang untuk membantu monitoring timbulan sampah di Kabupaten Bogor dengan fokus pada TPA Galuga. Fitur utama meliputi dashboard monitoring, input data per kecamatan, status real-time, grafik visualisasi, serta laporan.</p>
+    </div>
   </section>
 
   <!-- Dashboard Cards -->
@@ -49,14 +60,14 @@
           <div id="countyStatus" class="status-pill safety"><span class="dot" style="background:var(--green)"></span> Safety</div>
         </div>
       </div>
-
+      
       <div style="margin-top:16px">
         <div class="small">Total Timbulan Hari Ini</div>
         <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
           <div style="font-size:36px;font-weight:800" id="totalTon">0</div>
           <div class="small">ton / hari</div>
         </div>
-
+        
         <div style="margin-top:14px" class="small">Legend</div>
         <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
           <div class="status-pill safety"><span class="dot" style="background:var(--green)"></span> Safety &lt;= 80% kapasitas</div>
@@ -125,15 +136,6 @@
   </section>
 
 
-  <!-- Tentang Sistem -->
-  <section class="card" id="tentang" style="margin-top:20px">
-    <div style="display: flex;justify-content: center;align-items: center;">
-      <div class="small">Tentang Sistem</div>
-    </div>
-    <div style="display: flex;justify-content: center;align-items: center;">
-      <p style="color:var(--muted);font-size:14px;text-align:center">Sistem Penunjang Keputusan ini dirancang untuk membantu monitoring timbulan sampah di Kabupaten Bogor dengan fokus pada TPA Galuga. Fitur utama meliputi dashboard monitoring, input data per kecamatan, status real-time, grafik visualisasi, serta laporan.</p>
-    </div>
-  </section>
 
   <!-- Footer -->
   <footer>
@@ -142,5 +144,23 @@
 
   <!-- Script -->
   <script src="script.js"></script>
+  <script>
+    // Cek login status
+    const loggedIn = JSON.parse(localStorage.getItem("loggedInUser"));
+    if(!loggedIn){
+      alert("Harap login terlebih dahulu ❌");
+      window.location.href = "login.html";
+    } else {
+      document.getElementById("welcomeMsg").textContent =
+        "Halo, " + loggedIn.username + " 👋 Selamat datang di Dashboard SPK Sampah 🚀";
+    }
+
+    // Fungsi logout
+    function logout(){
+      localStorage.removeItem("loggedInUser");
+      alert("Anda telah logout ✅");
+      window.location.href = "login.html";
+    }
+  </script>
 </body>
 </html>
