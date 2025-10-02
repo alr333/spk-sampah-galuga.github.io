@@ -134,6 +134,7 @@ document.getElementById('resetBtn').addEventListener('click', ()=>{
     kecamatan = defaultKecamatan.slice(); save(); render();
   }
 });
+
 // Fungsi animasi persentase CH4
 function animateMethane(prev, target) {
   const methaneEl = document.getElementById('methanePercent');
@@ -172,4 +173,22 @@ const totalCH4 = kecamatan.reduce((s,k)=>s + k.ton * 0.05, 0); // ton CH4/hari
 let riskPercent = Math.min((totalCH4 / CH4_LIMIT) * 100, 100); // batas max 100%
 animateMethane(0, riskPercent); // animasi dari 0% ke nilai sekarang
 
+//login
+// Cek apakah sudah login → langsung masuk dashboard
+
+
+    // logout
+    function logout(){
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "login.html";
+    }
+
+  // Fungsi logout
+  function logout(){
+    localStorage.removeItem("loggedInUser");
+    alert("Anda telah logout ✅");
+    window.location.href = "login.html";
+  }
+
+  
 
