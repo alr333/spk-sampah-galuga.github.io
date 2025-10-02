@@ -149,7 +149,7 @@
     const loggedIn = JSON.parse(localStorage.getItem("loggedInUser"));
     if(!loggedIn){
       alert("Harap login terlebih dahulu ❌");
-      window.location.href = "login.html";
+      window.location.href = "halaman_utama.html";
     } else {
       document.getElementById("welcomeMsg").textContent =
         "Halo, " + loggedIn.username + " 👋 Selamat datang di Dashboard SPK Sampah 🚀";
