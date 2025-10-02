@@ -1,6 +1,6 @@
 {
   "builds": [
-    { "src": "index.html", "use": "@vercel/static" }
+    { "src": "halaman_utama.html", "use": "@vercel/static" }
   ],
   "outputDirectory": "."
 }
