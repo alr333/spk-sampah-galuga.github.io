@@ -339,3 +339,76 @@ footer {
     flex-direction: column;
   }
 }
+
+/*loginpage*/
+
+/* Halaman Login */
+.login-page {
+  background-image: url('img/bg.login.jpg');
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: white;
+}
+
+.login-container {
+  text-align: center;
+}
+
+.login-title {
+  margin-bottom: 20px;
+  font-size: 1.6rem;
+  color: var(--blue);
+}
+
+.login-card {
+  width: 400px;
+  margin: auto;
+  padding: 2rem;
+  background: var(--card);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  border-radius: 12px;
+}
+
+.login-card h2 {
+  margin-bottom: 1rem;
+  color: var(--green);
+}
+
+.login-card input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: none;
+  background: var(--glass);
+  color: white;
+}
+
+.login-card input:focus {
+  outline: 2px solid var(--blue);
+}
+
+.login-card button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: var(--blue);
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.login-card button:hover {
+  background: #0284c7;
+}
+
+.login-footer {
+  margin-top: 15px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
