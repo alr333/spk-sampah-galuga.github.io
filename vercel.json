@@ -1,6 +1,9 @@
 {
-  "builds": [
-    { "src": "halaman_utama.html", "use": "@vercel/static" }
-  ],
-  "outputDirectory": "."
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/halamanutama.html",
+      "permanent": true
+    }
+  ]
 }
